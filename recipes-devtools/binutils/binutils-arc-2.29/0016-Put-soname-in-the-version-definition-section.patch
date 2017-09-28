@@ -1,0 +1,53 @@
+From e1091ae78a540fb1d19ab3e13e50471b6ea30b2e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+ <mylene.josserand@free-electrons.com>
+Date: Wed, 17 May 2017 10:18:37 +0200
+Subject: [PATCH] Put soname in the version definition section
+
+PR ld/20828: Move symbol version processing ahead of GC symbol sweep
+
+breaks version definition with --version-script --soname.  This patch
+fixes it by getting soname index before generating the version definition
+section.
+
+bfd/
+
+        PR ld/21389
+	* elflink.c (bfd_elf_size_dynamic_sections): Get soname index
+	before generating the version definition section.
+
+ld/
+
+        PR ld/21389
+	* testsuite/ld-elf/pr21389.map: New file.
+	* testsuite/ld-elf/pr21389.s: Likewise.
+	* testsuite/ld-elf/pr21389a.d: Likewise.
+	* testsuite/ld-elf/pr21389b.d: Likewise.
+	* testsuite/ld-elf/pr21389c.d: Likewise.
+
+Note: Patch from Maciej W. Rozycki <macro@imgtec.com>.
+---
+ bfd/elflink.c                   |  1 +
+ 1 files changed, 1 insertions(+)
+ create mode 100644 ld/testsuite/ld-elf/pr21389.map
+ create mode 100644 ld/testsuite/ld-elf/pr21389.s
+ create mode 100644 ld/testsuite/ld-elf/pr21389a.d
+ create mode 100644 ld/testsuite/ld-elf/pr21389b.d
+ create mode 100644 ld/testsuite/ld-elf/pr21389c.d
+
+diff --git a/bfd/elflink.c b/bfd/elflink.c
+index 776357f..f9813e1 100644
+--- a/bfd/elflink.c
++++ b/bfd/elflink.c
+ 
+@@ -5943,6 +5940,7 @@ bfd_elf_size_dynamic_sections (bfd *output_bfd,
+       struct elf_info_failed eif;
+       bfd_boolean all_defined;
+       asection *s;
++      size_t soname_indx;
+ 
+       eif.info = info;
+       eif.failed = FALSE;
+-- 
+2.7.4
+

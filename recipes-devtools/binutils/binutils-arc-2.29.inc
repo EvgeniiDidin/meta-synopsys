@@ -1,5 +1,5 @@
-BINUTILS_TAG = "arc-2017.03-rc2"
-SRC_URI[sha256sum] = "09535f0dea6829a45323e91393ea8484afde9cf578c80e9b5cc96fc0e63d6cf7"
+BINUTILS_TAG = "arc-2017.09-rc1"
+SRC_URI[sha256sum] = "6cdb650dbe9c249b500e4b0be1a4f1196ce65c95dbf4864c66eec3223da24926"
 SRC_URI = "\
 	https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb/archive/${BINUTILS_TAG}.tar.gz;downloadfilename=binutils-${PV}.tar.gz \
 	file://0003-gprof-add-uclibc-support-to-configure.patch \

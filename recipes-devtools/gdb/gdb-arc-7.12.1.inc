@@ -1,4 +1,4 @@
-GDB_TAG = "arc-2017.03-rc2-gdb"
+GDB_TAG = "arc-2017.09-rc1-gdb"
 SRC_URI[sha256sum] = "674a8c0abcca247ce996c9c68c0631cfb49ca27c17e40cc677a733f5c677c13f"
 SRC_URI = " \
 	https://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb/archive/${GDB_TAG}.tar.gz;downloadfilename=gdb-${PV}.tar.gz \

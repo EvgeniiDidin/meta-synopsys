@@ -1,14 +1,14 @@
 require recipes-devtools/gcc/gcc-common.inc
 
-GCC_TAG = "arc-2017.03-rc2"
-SRC_URI[sha256sum] = "dcf2219133448321d9bcdff4513f3283c8f47ee7baa77eeb567252c8279b1813"
+GCC_TAG = "arc-2017.09-rc1"
+SRC_URI[sha256sum] = "260f7ad7c629e101a491140470dbea4bd93e0bfee08a018b1bbdf6c27912907a"
 SRC_URI = "\
 	https://github.com/foss-for-synopsys-dwc-arc-processors/gcc/archive/${GCC_TAG}.tar.gz;downloadfilename=gcc-${PV}.tar.gz \
 	file://0014-optional-libstdc.patch \
 	file://0032-gcc-4.8-won-t-build-with-disable-dependency-tracking.patch \
 "
 
-BINV = "6.3.0"
+BINV = "7.2.0"
 
 S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${GCC_TAG}"
 B = "${WORKDIR}/git/build.${HOST_SYS}.${TARGET_SYS}"
