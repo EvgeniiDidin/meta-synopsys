@@ -6,6 +6,7 @@ SRC_URI = "\
 	git://github.com/foss-for-synopsys-dwc-arc-processors/gcc;branch=arc-2018.09;protocol=http; \
 	file://0014-optional-libstdc.patch \
 	file://0024-gcc-4.8-won-t-build-with-disable-dependency-tracking.patch \
+	file://revert.patch \
 "
 
 BINV = "8.2.1"

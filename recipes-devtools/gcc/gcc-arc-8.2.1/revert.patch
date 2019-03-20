@@ -1,0 +1,113 @@
+From e3ffaa6a45bc1b89c35681b5c0dc73db175c2e68 Mon Sep 17 00:00:00 2001
+From: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+Date: Wed, 20 Feb 2019 17:36:52 +0300
+Subject: [PATCH] <manual-revert> [ARC] Update movhi and movdi patterns
+
+Signed-off-by: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+---
+ gcc/config/arc/arc.c                         |  3 +--
+ gcc/config/arc/arc.md                        | 27 +++++++++++++--------------
+ gcc/testsuite/gcc.target/arc/store-merge-1.c | 19 -------------------
+ 3 files changed, 14 insertions(+), 35 deletions(-)
+ delete mode 100644 gcc/testsuite/gcc.target/arc/store-merge-1.c
+
+diff --git a/gcc/config/arc/arc.c b/gcc/config/arc/arc.c
+index 88b76a2e94b..9e37c7d26ac 100644
+--- a/gcc/config/arc/arc.c
++++ b/gcc/config/arc/arc.c
+@@ -10007,8 +10007,7 @@ arc_split_move (rtx *operands)
+ 
+   if (TARGET_LL64
+       && ((memory_operand (operands[0], mode)
+-	   && (even_register_operand (operands[1], mode)
+-	       || satisfies_constraint_Cm3 (operands[1])))
++	   && even_register_operand (operands[1], mode))
+ 	  || (memory_operand (operands[1], mode)
+ 	      && even_register_operand (operands[0], mode))))
+     {
+diff --git a/gcc/config/arc/arc.md b/gcc/config/arc/arc.md
+index f2313fc49f2..076e1c4bf42 100644
+--- a/gcc/config/arc/arc.md
++++ b/gcc/config/arc/arc.md
+@@ -748,10 +748,8 @@ core_3, archs4x, archs4xd, archs4xd_slow"
+    || (CONSTANT_P (operands[1])
+        /* Don't use a LIMM that we could load with a single insn - we loose
+ 	  delay-slot filling opportunities.  */
+-       && !satisfies_constraint_I (operands[1])
+-       && satisfies_constraint_Usc (operands[0]))
+-   || (satisfies_constraint_Cm3 (operands[1])
+-      && memory_operand (operands[0], SImode))"
++	&& !satisfies_constraint_I (operands[1])
++	&& satisfies_constraint_Usc (operands[0]))"
+   "@
+    mov%? %0,%1%&	;0
+    mov%? %0,%1%&	;1
+@@ -1248,12 +1246,10 @@ core_3, archs4x, archs4xd, archs4xd_slow"
+   ")
+ 
+ (define_insn_and_split "*movdi_insn"
+-  [(set (match_operand:DI 0 "move_dest_operand"      "=w, w,r,   m")
+-	(match_operand:DI 1 "move_double_src_operand" "c,Hi,m,cCm3"))]
++  [(set (match_operand:DI 0 "move_dest_operand"      "=w, w,r,m")
++	(match_operand:DI 1 "move_double_src_operand" "c,Hi,m,c"))]
+   "register_operand (operands[0], DImode)
+-   || register_operand (operands[1], DImode)
+-   || (satisfies_constraint_Cm3 (operands[1])
+-      && memory_operand (operands[0], DImode))"
++   || register_operand (operands[1], DImode)"
+   "*
+ {
+   switch (which_alternative)
+@@ -1263,16 +1259,19 @@ core_3, archs4x, archs4xd, archs4xd_slow"
+ 
+     case 2:
+     if (TARGET_LL64
+-        && memory_operand (operands[1], DImode)
+-	&& even_register_operand (operands[0], DImode))
++	&& ((even_register_operand (operands[0], DImode)
++	     && memory_operand (operands[1], DImode))
++	    || (memory_operand (operands[0], DImode)
++	        && even_register_operand (operands[1], DImode))))
+       return \"ldd%U1%V1 %0,%1%&\";
+     return \"#\";
+ 
+     case 3:
+     if (TARGET_LL64
+-	&& memory_operand (operands[0], DImode)
+-	&& (even_register_operand (operands[1], DImode)
+-	    || satisfies_constraint_Cm3 (operands[1])))
++	&& ((even_register_operand (operands[0], DImode)
++	     && memory_operand (operands[1], DImode))
++	    || (memory_operand (operands[0], DImode)
++	        && even_register_operand (operands[1], DImode))))
+      return \"std%U0%V0 %1,%0\";
+     return \"#\";
+     }
+diff --git a/gcc/testsuite/gcc.target/arc/store-merge-1.c b/gcc/testsuite/gcc.target/arc/store-merge-1.c
+deleted file mode 100644
+index df367ac8246..00000000000
+--- a/gcc/testsuite/gcc.target/arc/store-merge-1.c
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/* { dg-do compile } */
+-/* { dg-require-effective-target archs }*/
+-/* { dg-options "-O3 -mll64" } */
+-
+-/* This tests checks if we merge the two 32-bit stores into one 64-bit
+-   store.  It also checks if we use std w6,[reg] format.  */
+-
+-typedef struct {
+-  unsigned long __val[2];
+-} sigset_t;
+-
+-int sigemptyset2 (sigset_t *set)
+-{
+-  set->__val[0] = 0;
+-  set->__val[1] = 0;
+-  return 0;
+-}
+-
+-/* { dg-final { scan-assembler "std 0,\\\[r" } } */
+-- 
+2.16.2
+
