@@ -17,6 +17,7 @@ SRC_URI = "https://www.kernel.org/pub/linux/kernel/v4.x/linux-${PV}.tar.xz \
 	file://3003-Experimental-ARC-increase-memory-to-1.5GB.patch \
 	file://5001-Enable-FBDEV_DRM-emulation-for-HSDK.patch \
 	file://6001-ARC-adjust-memblock_reserve-of-kernel-memory.patch \
+	file://8000-ARCv2-support-manual-regfile-save-on-interrupts.patch \
 "
 #file://2001-ARC-prevent-showing-irrelevant-exception-info-in-sig.patch 
 #file://2002-ARC-split-show_faulting_vma-for-logic-and-representa.patch 
