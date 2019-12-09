@@ -1,5 +1,5 @@
-require recipes-devtools/gdb/gdb.inc
-require recipes-devtools/gdb/gdb-${PV}.inc
+require gdb.inc
+require gdb-${PV}.inc
 
 inherit python3-dir
 
@@ -26,4 +26,3 @@ EOF
 		chmod +x ${WORKDIR}/python
 	fi
 }
-CPPFLAGS_append_libc-musl = " -Drpl_gettimeofday=gettimeofday -Drpl_stat=stat"
