@@ -4,7 +4,7 @@ DEFAULTTUNE ?= "archs"
 TUNE_PKGARCH = "${TUNE_PKGARCH_tune-${DEFAULTTUNE}}"
 
 TUNEVALID[hs] = "Enable ARC HS core with 32-bit atomic ops"
-TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'hs', ' -mcpu=hs', '', d)}"
+TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'hs', ' -mcpu=hs4x -mfpu=fpud', '', d)}"
 
 TUNEVALID[llsc64] = "Enable 64-bit LL/SC operations"
 TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'llsc64', ' -mll64', '', d)}"
@@ -31,7 +31,7 @@ TUNE_FEATURES_tune-hs38 = "hs llsc64 plus_qmacw"
 TUNE_PKGARCH_tune-hs38 = "hs38"
 PACKAGE_EXTRA_ARCHS_tune-hs38 = "hs38 hs38linux"
 
-TUNE_FEATURES_tune-hs38linux = "hs llsc64 plus_qmacw fpud_all"
+TUNE_FEATURES_tune-hs38linux = "hs38_linux llsc64 plus_qmacw fpud_all"
 TUNE_PKGARCH_tune-hs38linux = "hs38linux"
 PACKAGE_EXTRA_ARCHS_tune-hs38linux = "hs38linux"
 
