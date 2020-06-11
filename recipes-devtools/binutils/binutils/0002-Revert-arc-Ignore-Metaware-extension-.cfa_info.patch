@@ -1,0 +1,76 @@
+From 3c8561555884bd53ac3cb6b164c3a91d7bbba7f3 Mon Sep 17 00:00:00 2001
+From: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+Date: Mon, 1 Jun 2020 22:12:45 +0300
+Subject: [PATCH 2/3] Revert "arc: Ignore Metaware extension .cfa_info"
+
+This reverts commit ee82f259a181134c4bdc971948f68a20e0a31992.
+---
+ gdb/arc-tdep.c     | 23 -----------------------
+ include/dwarf2.def |  3 ---
+ 2 files changed, 26 deletions(-)
+
+diff --git a/gdb/arc-tdep.c b/gdb/arc-tdep.c
+index 200dfb4e217..77bcbd6c455 100644
+--- a/gdb/arc-tdep.c
++++ b/gdb/arc-tdep.c
+@@ -22,8 +22,6 @@
+ #include "defs.h"
+ #include "arch-utils.h"
+ #include "disasm.h"
+-#include "dwarf2.h"
+-#include "dwarf2/expr.h"
+ #include "dwarf2/frame.h"
+ #include "frame-base.h"
+ #include "frame-unwind.h"
+@@ -1834,24 +1832,6 @@ static const struct frame_base arc_normal_base = {
+   arc_frame_base_address
+ };
+ 
+-static bool
+-arc_execute_dwarf_cfa_vendor_op (struct gdbarch *gdbarch, gdb_byte op,
+-				 struct dwarf2_frame_state *fs,
+-				 const gdb_byte **insn_ptr,
+-				 const gdb_byte *insn_end)
+-{
+-  /* MetaWare extension emitted for _Interrupt functions.  Can be ignored by
+-     the GDB.  See
+-     https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/issues/122  */
+-  if (op == DW_CFA_ARC_info)
+-    {
+-      *insn_ptr = safe_skip_leb128 (*insn_ptr, insn_end);
+-      return true;
+-    }
+-
+-  return false;
+-}
+-
+ /* Initialize target description for the ARC.
+ 
+    Returns TRUE if input tdesc was valid and in this case it will assign TDESC
+@@ -2215,9 +2195,6 @@ arc_gdbarch_init (struct gdbarch_info info, struct gdbarch_list *arches)
+   frame_unwind_append_unwinder (gdbarch, &arc_frame_unwind);
+   frame_base_set_default (gdbarch, &arc_normal_base);
+ 
+-  set_gdbarch_execute_dwarf_cfa_vendor_op (gdbarch,
+-					   arc_execute_dwarf_cfa_vendor_op);
+-
+   /* Fill in target-dependent info in ARC-private structure.  */
+   tdep->is_sigtramp = NULL;
+   tdep->sigcontext_addr = NULL;
+diff --git a/include/dwarf2.def b/include/dwarf2.def
+index 52010e51e88..d8a8cce7947 100644
+--- a/include/dwarf2.def
++++ b/include/dwarf2.def
+@@ -792,9 +792,6 @@ DW_CFA_DUP (DW_CFA_AARCH64_negate_ra_state, 0x2d)
+ DW_CFA (DW_CFA_GNU_args_size, 0x2e)
+ DW_CFA (DW_CFA_GNU_negative_offset_extended, 0x2f)
+ 
+-/* ARC specific */
+-DW_CFA (DW_CFA_ARC_info, 0x34)
+-
+ DW_END_CFA
+ 
+ /* Index attributes in the Abbreviations Table.  */
+-- 
+2.16.2
+

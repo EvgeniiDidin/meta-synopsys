@@ -10,17 +10,15 @@ LIC_FILES_CHKSUM="\
     file://bfd/COPYING;md5=d32239bcb673463ab874e80d47fae504\
     "
 
-SRCREV ?= "arc-2018.09-release"
+SRCREV ?= "arc-2020.03-release"
 
 SRC_URI = "\
-     git://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb;protocol=https;branch=arc-2018.09; \
+     git://github.com/foss-for-synopsys-dwc-arc-processors/binutils-gdb;protocol=https;branch=arc-2020.03; \
      file://0004-Point-scripts-location-to-libdir.patch \
-     file://0005-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0008-don-t-let-the-distro-compiler-point-to-the-wrong-ins.patch \
-     file://0009-warn-for-uses-of-system-directories-when-cross-linki.patch \
+     file://0001-Revert-ARC-Add-default-reggroups.patch \
+     file://0002-Revert-arc-Ignore-Metaware-extension-.cfa_info.patch \
+     file://0003-Revert-dwarf2-Add-arguments-to-gdbarch_execute_dwarf.patch \
 "
 S  = "${WORKDIR}/git"
 
-do_configure_prepend () {
-        rm -rf ${S}/gdb ${S}/libdecnumber ${S}/readline ${S}/sim
-}

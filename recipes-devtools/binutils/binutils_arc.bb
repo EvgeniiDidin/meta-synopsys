@@ -6,6 +6,7 @@ DEPENDS += "flex bison zlib"
 EXTRA_OECONF += "--with-sysroot=/ \
                 --enable-install-libbfd \
                 --enable-install-libiberty \
+		--enable-install-libopcodes \
                 --enable-shared \
                 --with-system-zlib \
                 "
@@ -45,5 +46,9 @@ do_install_class-native () {
 # Split out libbfd-*.so so including perf doesn't include extra stuff
 PACKAGE_BEFORE_PN += "libbfd"
 FILES_libbfd = "${libdir}/libbfd-*.so"
+PACKAGE_BEFORE_PN += "libopcodes"
+FILES_libopcodes = "${libdir}/libopcodes-*.so"
+#RDEPENDS_${PN} += " opcodes"
+
 
 BBCLASSEXTEND = "native nativesdk"
