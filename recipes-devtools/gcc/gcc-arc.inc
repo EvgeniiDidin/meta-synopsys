@@ -6,7 +6,7 @@ PV = "arc"
 
 # BINV should be incremented to a revision after a minor gcc release
 
-BINV = "8.2.1"
+BINV = "9.3.1"
 
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arc:"
 
@@ -23,10 +23,10 @@ LIC_FILES_CHKSUM = "\
     file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
 "
 
-SRCREV ?= "arc-2018.09-release"
+SRCREV ?= "arc-2020.03-release"
 
 SRC_URI = "\
-           git://github.com/foss-for-synopsys-dwc-arc-processors/gcc.git;protocol=https;branch=arc-2018.09; \
+           git://github.com/foss-for-synopsys-dwc-arc-processors/gcc.git;protocol=https;branch=arc-2020.03; \
            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
            file://0003-gcc-poison-system-directories.patch \
            file://0005-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
@@ -36,7 +36,7 @@ SRC_URI = "\
            file://0009-COLLECT_GCC_OPTIONS.patch \
            file://0010-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
            file://0011-fortran-cross-compile-hack.patch \
-           file://0012-cpp-honor-sysroot.patch \
+	    file://0012-cpp-honor-sysroot.patch \
            file://0014-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
            file://0015-gcc-Fix-argument-list-too-long-error.patch \
            file://0016-Disable-sdt.patch \
@@ -61,7 +61,6 @@ SRC_URI = "\
            file://0038-fix-segmentation-fault-in-precompiled-header-generat.patch \
            file://0039-Fix-for-testsuite-failure.patch \
            file://0040-Re-introduce-spe-commandline-options.patch \
-           file://0041-ARC-Emit-blockage-regardless-to-avoid-delay-slot-sch.patch \
            ${BACKPORTS} \
 "
 BACKPORTS = "\
@@ -71,12 +70,14 @@ S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/git"
 B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 
 # Language Overrides
-FORTRAN = ""
+FORTRAN = ",fortran"
 JAVA = ""
 
 LTO = "--enable-lto"
 SSP ?= "--disable-libssp"
 SSP_mingw32 = "--enable-libssp"
+
+EXTRA_OECONF += "--disable-multilib"
 
 EXTRA_OECONF_BASE = "\
     ${LTO} \
@@ -89,9 +90,25 @@ EXTRA_OECONF_BASE = "\
     --enable-linker-build-id \
     --with-ppl=no \
     --with-cloog=no \
+--disable-multilib \
     --enable-checking=release \
     --enable-cheaders=c_global \
     --without-isl \
+"
+
+EXTRA_OECONF_INITIAL = "\
+    --disable-libmudflap \
+--disable-multilib \
+    --disable-libgomp \
+    --disable-libitm \
+    --disable-libquadmath \
+    --with-system-zlib \
+    --disable-lto \
+    --disable-plugin \
+    --enable-linker-build-id \
+    --enable-decimal-float=no \
+    --without-isl \
+    --disable-libssp \
 "
 
 EXTRA_OECONF_PATHS = "\
@@ -99,3 +116,6 @@ EXTRA_OECONF_PATHS = "\
     --with-sysroot=/not/exist \
     --with-build-sysroot=${STAGING_DIR_TARGET} \
 "
+
+//GCCMULTILIB = "--disable-multilib"
+
