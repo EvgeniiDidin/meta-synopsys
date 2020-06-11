@@ -1,0 +1,5 @@
+require linux-arc.inc
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
+SRC_URI[md5sum] = "41f02b34dbb66ffa6b71bb3e2361e94d"
+SRC_URI[sha256sum] = "65ab799393d490463c610270634874dfcb66440a312837d04b51bbb69323034e"
