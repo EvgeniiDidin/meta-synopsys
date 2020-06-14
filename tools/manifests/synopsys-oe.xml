@@ -3,10 +3,10 @@
 <manifest>
   <remote name="openembedded" fetch="https://github.com/openembedded/" />
   <remote name="synopsys" fetch="https://github.com/foss-for-synopsys-dwc-arc-processors/" />
-  <default remote="openembedded" revision="master" />
+  <remote name="didin" fetch="https://github.com/EvgeniiDidin/" />
 
-  <project name="meta-synopsys" remote="synopsys" path="meta-synopsys" revision="master" />
-  <project name="openembedded-core" remote="openembedded" path="openembedded-core" revision="master" />
-  <project name="bitbake" remote="openembedded" path="openembedded-core/bitbake" revision="master" />
-  <project name="meta-openembedded" remote="openembedded" path="meta-openembedded" revision="master" />
+  <project name="meta-synopsys" remote="didin" path="meta-synopsys" revision="474722054979771062bfe1395f5b19637f164e5b" />
+  <project name="openembedded-core" remote="didin" path="openembedded-core" revision="279a5a9133f6fc0d69ca0f5058c187dc73b0df19" />
+  <project name="bitbake" remote="openembedded" path="openembedded-core/bitbake" revision="0fb4b5153237af4a13b2c65711ab798b0de06c2f" />
+  <project name="meta-openembedded" remote="openembedded" path="meta-openembedded" revision="459dbf10783a89540d9334e823524ec1dbb21502" />
 </manifest>
