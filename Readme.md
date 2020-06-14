@@ -1,4 +1,4 @@
-# Building basic images for ARC boards with OpenEmbedded
+# Building SDK image for ARC HSDK board with OpenEmbedded
 
 ## Preparation
 
@@ -6,23 +6,22 @@
 ```
 mkdir oe
 cd oe
-repo init -u https://github.com/foss-for-synopsys-dwc-arc-processors/meta-synopsys -b master -m tools/manifests/synopsys-oe.xml
+repo init -u https://github.com/EvgeniiDidin/meta-synopsys -b didin_arc_2020.03 -m tools/manifests/synopsys-oe.xml
 repo sync
 ```
 
-### Setup environment
+### Run OE tuned docker image based on Centos 7
+```
+docker run --rm -it -v <path-to-oe>:/workdir crops/poky --workdir=/workdir
+```
+
+### Setup environment and build image
 ```
 . ./openembedded-core/oe-init-build-env
 bitbake-layers add-layer ../meta-openembedded/meta-oe
 bitbake-layers add-layer ../meta-synopsys
+MACHINE=hsdk bitbake core-image-base -k
 ```
 
-### Start building
- * `vmlinux` usable with nSIM simulator
-    - for ARC700: `MACHINE=nsim700 bitbake virtual/kernel`
-    - for ARCHS38: `MACHINE=nsimhs bitbake virtual/kernel`
-
- * SD-card image
-    - for AXS101: `MACHINE=axs101 bitbake core-image-base`
-    - for AXS103: `MACHINE=ax103 bitbake core-image-base`
-    - for HSDK: `MACHINE=hsdk bitbake core-image-base`
+After several hours of building the result image will be stored here:
+**build/tmp-glibc/deploy/images/hsdk/core-image-base-hsdk.wic**
